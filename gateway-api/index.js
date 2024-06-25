@@ -6,7 +6,6 @@ dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT 
 
-
 const app = express();
 
 app.use('/api-auth', createProxyMiddleware({ target: process.env.USER_URL, changeOrigin: true }));

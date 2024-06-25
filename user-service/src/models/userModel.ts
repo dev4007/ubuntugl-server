@@ -1,10 +1,59 @@
-// userModel.js
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
-import bcrypt from "bcrypt";
+// userModel.ts
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/db";
 
-const User = sequelize.define(
-  "User",
+interface UserAttributes {
+  id?: number;
+  sponsorById?: string;
+  referralCode?: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: "Male" | "Female" | "Other";
+  profile: string;
+  address: string;
+  address2?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  website?: string;
+  mobile: string;
+  email: string;
+  password: string;
+  isRegistered: boolean;
+  wallet: number;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'sponsorById' | 'referralCode' | 'address2' | 'website'> {}
+
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public id!: number;
+  public sponsorById!: string;
+  public referralCode!: string;
+  public firstName!: string;
+  public lastName!: string;
+  public dateOfBirth!: string;
+  public gender!: "Male" | "Female" | "Other";
+  public profile!: string;
+  public address!: string;
+  public address2!: string;
+  public city!: string;
+  public state!: string;
+  public zipCode!: string;
+  public country!: string;
+  public website!: string;
+  public mobile!: string;
+  public email!: string;
+  public password!: string;
+  public isRegistered!: boolean;
+  public wallet!: number;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+User.init(
   {
     sponsorById: {
       type: DataTypes.STRING,
@@ -86,34 +135,13 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: 0,
     }
- 
   },
   {
+    sequelize,
     tableName: "users",
-   hooks: {
-      beforeCreate: async (user) => {
-        // Generate referral code
-        const lastUser = await User.findOne({
-          order: [["createdAt", "DESC"]],
-        });
-
-        if (!lastUser || !lastUser.referralCode) {
-          // If no last user or referral code is empty, set referral code to '1'
-          user.referralCode = '1';
-        } else {
-          const lastReferralCode = parseInt(lastUser.referralCode);
-          if (lastReferralCode < 9999999) {
-            // Increment referral code by 1
-            user.referralCode = (lastReferralCode + 1).toString();
-          } else {
-            // Set referral code to '9999999' if it reaches the maximum
-            user.referralCode = '9999999';
-          }
-        }
-      
-      },
-    },
+   
   }
 );
 
-export default User;
+
+export { User, UserAttributes, UserCreationAttributes };
