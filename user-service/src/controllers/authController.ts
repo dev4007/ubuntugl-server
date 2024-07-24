@@ -124,6 +124,7 @@ const RefreshToken = (req: Request, res: Response) => {
 
     try {
         const decoded = jwt.verify(token, process.env.REFRESH_JWT_SECRET!) as JwtPayload;
+   
         if (!decoded || typeof decoded !== 'object' || !decoded.hasOwnProperty('id')) {
             throw new Error('Invalid token payload');
         }

@@ -16,7 +16,7 @@ router.post("/forget-password", requestPasswordReset);
 router.post("/reset-password", resetPassword);
 
 //user Details
-router.get("/get", getListUsers);
+router.get("/get",authMiddleware, getListUsers);
 router.get("/:id", getUserByIdController);
 router.delete("/delete/:id", authMiddleware, deleteUserByIdController);
 
